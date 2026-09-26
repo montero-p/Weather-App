@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clima</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="weather-backdrop" aria-hidden="true">
+      <span class="orb orb-1"></span>
+      <span class="orb orb-2"></span>
+      <span class="orb orb-3"></span>
+    </div>
+
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Weather dashboard</p>
+          <h1>Clima</h1>
+          <p class="app-description">Track live weather, hourly outlooks, and the air around you wherever life takes you.</p>
+        </div>
+        <button id="refreshBtn" class="secondary-btn" type="button">Refresh</button>
+      </header>
+
+      <form id="weatherForm" class="search-bar" autocomplete="off">
+        <div class="search-controls">
+          <label class="sr-only" for="locationInput">Location</label>
+          <input
+            id="locationInput"
+            name="location"
+            type="text"
+            placeholder="Search for a city or town"
+            aria-label="Location"
+          />
+
+          <label class="sr-only" for="citySelect">Popular cities</label>
+          <select id="citySelect" aria-label="Popular cities">
+            <option value="London">London</option>
+            <option value="Paris">Paris</option>
+            <option value="Tokyo">Tokyo</option>
+            <option value="New York">New York</option>
+            <option value="Dubai">Dubai</option>
+            <option value="Sydney">Sydney</option>
+            <option value="Lagos">Lagos</option>
+            <option value="Nairobi">Nairobi</option>
+          </select>
+
+          <button id="geoBtn" type="button" class="secondary-btn geo-btn">Use My Location</button>
+          <button type="submit" class="primary-btn">Get Weather</button>
+        </div>
+      </form>
+
+      <div id="statusMessage" class="status-message" aria-live="polite"></div>
+
+      <main class="weather-layout">
+        <section class="current-card">
+          <div class="location-row">
+            <div>
+              <p class="label">Current location</p>
+              <h2 id="locationName">Loading...</h2>
+            </div>
+            <span id="weatherIcon" class="weather-icon" aria-label="Weather icon">☀️</span>
+          </div>
+
+          <div class="current-temp-row">
+            <div>
+              <p class="label">Temperature</p>
+              <div class="temp-block"><span id="currentTemp">--</span><span class="unit">°C</span></div>
+            </div>
+            <div class="condition-box">
+              <p id="weatherDescription">--</p>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <article class="stat-item">
+              <span class="stat-label">Wind speed</span>
+              <strong id="windSpeed">--</strong>
+            </article>
+            <article class="stat-item">
+              <span class="stat-label">Rain chance</span>
+              <strong id="rainChance">--</strong>
+            </article>
+            <article class="stat-item">
+              <span class="stat-label">Humidity</span>
+              <strong id="humidity">--</strong>
+            </article>
+            <article class="stat-item">
+              <span class="stat-label">UV index</span>
+              <strong id="uvIndex">--</strong>
+            </article>
+            <article class="stat-item">
+              <span class="stat-label">Air quality</span>
+              <strong id="airQuality">--</strong>
+            </article>
+          </div>
+        </section>
+
+        <section class="periods">
+          <article class="period-card future-panel">
+            <div class="period-header">
+              <h3>Expected weather</h3>
+              <span id="futureDateLabel">--</span>
+            </div>
+            <div id="futureSummary" class="period-summary">
+              <p>Loading forecast...</p>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
