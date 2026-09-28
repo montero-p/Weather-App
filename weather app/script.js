@@ -6,6 +6,7 @@ const citySelect = document.getElementById('citySelect');
 const refreshBtn = document.getElementById('refreshBtn');
 const geoBtn = document.getElementById('geoBtn');
 const statusMessage = document.getElementById('statusMessage');
+const quickActions = document.querySelectorAll('.quick-action');
 
 const locationName = document.getElementById('locationName');
 const weatherIcon = document.getElementById('weatherIcon');
@@ -23,6 +24,13 @@ const futureSummary = document.getElementById('futureSummary');
 function setStatus(message, isError = false) {
   statusMessage.textContent = message;
   statusMessage.classList.toggle('error', isError);
+}
+
+function setActiveQuickAction(locationNameValue) {
+  quickActions.forEach((button) => {
+    const isActive = (button.dataset.location || '').toLowerCase() === (locationNameValue || '').toLowerCase();
+    button.classList.toggle('active', isActive);
+  });
 }
 
 function formatDateLabel(dateString) {
@@ -299,11 +307,22 @@ async function fetchWeather(location = '', coordinates = null) {
   }
 }
 
+quickActions.forEach((button) => {
+  button.addEventListener('click', () => {
+    const value = button.dataset.location || defaultLocation;
+    locationInput.value = value;
+    citySelect.value = value;
+    setActiveQuickAction(value);
+    fetchWeather(value);
+  });
+});
+
 weatherForm.addEventListener('submit', (event) => {
   event.preventDefault();
   const value = locationInput.value.trim();
   if (citySelect && value) {
     citySelect.value = value;
+    setActiveQuickAction(value);
   }
   fetchWeather(value);
 });
@@ -312,6 +331,7 @@ citySelect.addEventListener('change', () => {
   const value = citySelect.value.trim();
   if (!value) return;
   locationInput.value = value;
+  setActiveQuickAction(value);
   fetchWeather(value);
 });
 
@@ -346,4 +366,5 @@ geoBtn.addEventListener('click', () => {
 
 locationInput.value = defaultLocation;
 citySelect.value = defaultLocation;
+setActiveQuickAction(defaultLocation);
 fetchWeather(defaultLocation);

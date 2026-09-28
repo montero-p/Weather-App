@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Get Your Food</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <div class="brand-block">
+          <span class="brand-mark">GF</span>
+          <div>
+            <p class="eyebrow">Town delivery</p>
+            <h1>Get Your Food</h1>
+          </div>
+        </div>
+        <div class="topbar-meta">
+          <span>Fast delivery</span>
+          <span>4.8 rated</span>
+        </div>
+      </header>
+
+      <main class="content-grid">
+        <section class="restaurant-panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Browse restaurants</p>
+              <h2>Popular in your town</h2>
+            </div>
+            <div class="filters">
+              <input id="restaurantSearch" type="text" placeholder="Search by restaurant or cuisine" />
+            </div>
+          </div>
+          <div id="restaurantList" class="restaurant-list"></div>
+        </section>
+
+        <aside class="checkout-panel">
+          <div class="order-card">
+            <p class="eyebrow">Your order</p>
+            <h3 id="selectedRestaurantTitle">Choose a restaurant</h3>
+            <div id="cartItems" class="cart-items">
+              <p class="empty-state">No items selected yet.</p>
+            </div>
+
+            <div class="totals">
+              <div><span>Subtotal</span><strong id="subtotalValue">$0.00</strong></div>
+              <div><span>Delivery</span><strong id="deliveryValue">$0.00</strong></div>
+              <div class="grand-total"><span>Total</span><strong id="totalValue">$0.00</strong></div>
+            </div>
+
+            <form id="checkoutForm" class="checkout-form">
+              <label>
+                Full name
+                <input id="customerName" name="customerName" type="text" placeholder="Your name" required />
+              </label>
+              <label>
+                Delivery address
+                <input id="address" name="address" type="text" placeholder="Street, area, town" required />
+              </label>
+              <label>
+                Special notes
+                <textarea id="notes" name="notes" rows="3" placeholder="Extra sauces, delivery instructions"></textarea>
+              </label>
+              <button type="submit" class="primary-btn">Place order</button>
+            </form>
+            <div id="orderMessage" class="order-message" aria-live="polite"></div>
+          </div>
+        </aside>
+      </main>
+
+      <section class="menu-section">
+        <div class="menu-header">
+          <div>
+            <p class="eyebrow">Restaurant menu</p>
+            <h2 id="menuTitle">Select a restaurant</h2>
+          </div>
+        </div>
+        <div id="menuItems" class="menu-grid"></div>
+      </section>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
+</html>

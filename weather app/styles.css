@@ -224,11 +224,44 @@ h1 {
   transform: translateY(-1px);
 }
 
+.quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.quick-action {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-soft);
+  border-radius: 999px;
+  padding: 0.7rem 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.quick-action:hover,
+.quick-action:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(118, 212, 255, 0.42);
+  color: var(--text);
+}
+
+.quick-action.active {
+  background: linear-gradient(135deg, rgba(118, 212, 255, 0.2), rgba(139, 226, 168, 0.18));
+  border-color: rgba(118, 212, 255, 0.48);
+  color: var(--text);
+  box-shadow: 0 12px 20px rgba(15, 37, 59, 0.2);
+}
+
 .status-message {
   min-height: 22px;
   margin-top: 14px;
   color: var(--text-soft);
   font-size: 0.95rem;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .status-message.error {
@@ -248,6 +281,15 @@ h1 {
   border: 1px solid var(--line);
   border-radius: 24px;
   padding: 24px;
+  box-shadow: 0 18px 35px rgba(7, 13, 24, 0.18);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.current-card:hover,
+.period-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(118, 212, 255, 0.32);
+  box-shadow: 0 24px 45px rgba(7, 13, 24, 0.22);
 }
 
 .location-row {
@@ -314,6 +356,13 @@ h1 {
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--line);
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.stat-item:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(118, 212, 255, 0.3);
 }
 
 .stat-item strong {

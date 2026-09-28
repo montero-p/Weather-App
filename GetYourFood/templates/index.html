@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Get Your Food</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+  </head>
+  <body>
+    <div class="page-shell mobile-app-shell">
+      <section id="loginScreen" class="login-screen">
+        <div class="login-card">
+          <div class="login-brand">
+            <span class="brand-mark">GF</span>
+            <div>
+              <p class="eyebrow">Town delivery</p>
+              <h1>Get Your Food</h1>
+            </div>
+          </div>
+
+          <div class="auth-panel">
+            <div class="auth-actions segment-control" aria-label="Authentication switcher">
+              <button id="showLoginBtn" class="segment-btn active" type="button">Login</button>
+              <button id="showSignupBtn" class="segment-btn" type="button">Sign up</button>
+            </div>
+            <div id="authStatus" class="auth-status">Not signed in</div>
+            <div id="authForms" class="auth-forms">
+              <form id="loginForm" class="auth-form">
+                <label>
+                  Phone or email
+                  <input name="identifier" type="text" placeholder="0712 345678 or you@example.com" required />
+                </label>
+                <label class="password-field">
+                  Password
+                  <div class="password-input-wrap">
+                    <input name="password" type="password" placeholder="••••••••" required />
+                    <button type="button" class="password-toggle" aria-label="Show password" title="Show password">
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                  </div>
+                </label>
+                <button type="submit" class="primary-btn small-btn">Login</button>
+              </form>
+
+              <form id="signupForm" class="auth-form hidden">
+                <label>
+                  Full name
+                  <input name="name" type="text" placeholder="Your name" required />
+                </label>
+                <div class="required-note">Provide both your phone number and email to create your account.</div>
+                <label>
+                  Email
+                  <input name="email" type="email" placeholder="you@example.com" required />
+                </label>
+                <label>
+                  Phone number
+                  <input name="phone" type="tel" placeholder="0712 345678" required />
+                </label>
+                <label class="password-field">
+                  Password
+                  <div class="password-input-wrap">
+                    <input id="signupPassword" name="password" type="password" placeholder="Create a password" required />
+                    <button type="button" class="password-toggle" aria-label="Show password" title="Show password">
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                  </div>
+                </label>
+                <div id="passwordStrengthWrapper" class="password-strength-wrapper hidden" aria-live="polite">
+                  <div class="password-strength-header">
+                    <span id="passwordStrengthLabel">Weak</span>
+                  </div>
+                  <div class="password-strength-bar" aria-hidden="true">
+                    <span id="passwordStrengthFill"></span>
+                  </div>
+                </div>
+                <button type="submit" class="primary-btn small-btn">Create account</button>
+              </form>
+
+              <form id="verificationForm" class="auth-form hidden">
+                <div class="required-note">Enter the 6-digit code sent to your phone to verify your account.</div>
+                <div id="verificationMeta" class="verification-meta">Check your SMS. The code is only valid for 10 minutes.</div>
+                <label>
+                  Verification code
+                  <input name="code" type="text" inputmode="numeric" maxlength="6" placeholder="123456" required />
+                </label>
+                <button type="submit" class="primary-btn small-btn">Verify account</button>
+                <button id="resendCodeBtn" class="ghost-btn small-btn" type="button">Resend code</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div id="dashboardScreen" class="dashboard-screen hidden">
+        <header class="topbar">
+          <div class="brand-block">
+            <span class="brand-mark">GF</span>
+            <div>
+              <p class="eyebrow">Town delivery</p>
+              <h1>Get Your Food</h1>
+            </div>
+          </div>
+          <div class="topbar-meta">
+            <span>Fast delivery</span>
+            <span>4.8 rated</span>
+            <a href="/admin" class="nav-link">Admin</a>
+            <button id="logoutBtn" class="logout-btn" type="button">Logout</button>
+          </div>
+        </header>
+
+        <div class="tab-panel" data-tab="home">
+          <main class="content-grid">
+            <section class="restaurant-panel">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Browse restaurants</p>
+                  <h2>Popular in your town</h2>
+                </div>
+                <div class="filters">
+                  <input id="restaurantSearch" type="text" placeholder="Search by restaurant or cuisine" />
+                </div>
+              </div>
+              <div id="restaurantList" class="restaurant-list"></div>
+            </section>
+
+            <aside class="checkout-panel">
+              <div class="order-card">
+                <p class="eyebrow">Your order</p>
+                <h3 id="selectedRestaurantTitle">Choose a restaurant</h3>
+                <div id="cartItems" class="cart-items">
+                  <p class="empty-state">No items selected yet.</p>
+                </div>
+
+                <div class="totals">
+                  <div><span>Subtotal</span><strong id="subtotalValue">KSh 0.00</strong></div>
+                  <div><span>Delivery</span><strong id="deliveryValue">KSh 0.00</strong></div>
+                  <div class="grand-total"><span>Total</span><strong id="totalValue">KSh 0.00</strong></div>
+                </div>
+
+                <form id="checkoutForm" class="checkout-form">
+                  <label>
+                    Full name
+                    <input id="customerName" name="customerName" type="text" placeholder="Your name" required />
+                  </label>
+                  <label>
+                    Delivery address
+                    <input id="address" name="address" type="text" placeholder="Street, area, town" required />
+                  </label>
+                  <label>
+                    Payment method
+                    <select id="paymentMethod" name="paymentMethod">
+                      <option value="Cash">Cash</option>
+                      <option value="Card">Card</option>
+                      <option value="M-Pesa">M-Pesa</option>
+                      <option value="Mobile wallet">Mobile wallet</option>
+                    </select>
+                  </label>
+                  <label>
+                    Special notes
+                    <textarea id="notes" name="notes" rows="3" placeholder="Extra sauces, delivery instructions"></textarea>
+                  </label>
+                  <button type="submit" class="primary-btn">Place order</button>
+                </form>
+                <div id="orderMessage" class="order-message" aria-live="polite"></div>
+              </div>
+            </aside>
+          </main>
+
+          <section class="menu-section">
+            <div class="menu-header">
+              <div>
+                <p class="eyebrow">Restaurant menu</p>
+                <h2 id="menuTitle">Select a restaurant</h2>
+              </div>
+            </div>
+            <div id="menuItems" class="menu-grid"></div>
+          </section>
+
+          <section class="delivery-tracker">
+            <div id="deliveryMap" class="map-panel" aria-label="Delivery route map"></div>
+            <div class="tracking-card">
+              <p class="eyebrow">Live delivery</p>
+              <h3>Order tracking</h3>
+              <div id="trackingStatus" class="tracking-status">Waiting for an order</div>
+              <ul class="tracking-steps">
+                <li class="active">Order confirmed</li>
+                <li>Restaurant preparing</li>
+                <li>Courier en route</li>
+                <li>Delivered</li>
+              </ul>
+            </div>
+          </section>
+        </div>
+
+        <div class="tab-panel hidden" data-tab="cart">
+          <section class="panel-card">
+            <div class="panel-header compact-header">
+              <div>
+                <p class="eyebrow">Cart</p>
+                <h2>Your bag</h2>
+              </div>
+            </div>
+            <div class="order-card compact-cart-card">
+              <h3 id="selectedRestaurantTitleCart">Choose a restaurant</h3>
+              <div id="cartItemsCart" class="cart-items"></div>
+              <div class="totals">
+                <div><span>Subtotal</span><strong id="subtotalValueCart">KSh 0.00</strong></div>
+                <div><span>Delivery</span><strong id="deliveryValueCart">KSh 0.00</strong></div>
+                <div class="grand-total"><span>Total</span><strong id="totalValueCart">KSh 0.00</strong></div>
+              </div>
+              <form id="checkoutFormCart" class="checkout-form">
+                <label>
+                  Delivery address
+                  <input id="addressCart" name="addressCart" type="text" placeholder="Street, area, town" required />
+                </label>
+                <label>
+                  Payment method
+                  <select id="paymentMethodCart" name="paymentMethodCart">
+                    <option value="Cash">Cash</option>
+                    <option value="Card">Card</option>
+                    <option value="M-Pesa">M-Pesa</option>
+                    <option value="Mobile wallet">Mobile wallet</option>
+                  </select>
+                </label>
+                <button type="submit" class="primary-btn">Checkout</button>
+              </form>
+            </div>
+          </section>
+        </div>
+
+        <div class="tab-panel hidden" data-tab="orders">
+          <section class="panel-card">
+            <div class="panel-header compact-header">
+              <div>
+                <p class="eyebrow">Orders</p>
+                <h2>Recent deliveries</h2>
+              </div>
+            </div>
+            <div class="empty-state-card">
+              <p class="empty-state">No orders yet. Your latest delivery will appear here.</p>
+            </div>
+          </section>
+        </div>
+
+        <div class="tab-panel hidden" data-tab="profile">
+          <section class="panel-card">
+            <div class="panel-header compact-header">
+              <div>
+                <p class="eyebrow">Profile</p>
+                <h2>My account</h2>
+              </div>
+            </div>
+            <div class="profile-card">
+              <div class="profile-header">
+                <span class="brand-mark small-brand">GF</span>
+                <div>
+                  <h3 id="profileName">Guest</h3>
+                  <p id="profileEmail">Not signed in</p>
+                </div>
+              </div>
+              <div class="profile-meta">
+                <div><span>Member</span><strong>Town delivery</strong></div>
+                <div><span>Rewards</span><strong>Silver</strong></div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
+</html>

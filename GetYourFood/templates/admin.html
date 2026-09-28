@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Get Your Food | Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+  </head>
+  <body class="admin-page">
+    <div class="page-shell admin-shell">
+      <header class="topbar admin-topbar">
+        <div class="brand-block">
+          <span class="brand-mark">GF</span>
+          <div>
+            <p class="eyebrow">Delivery admin</p>
+            <h1>Order dashboard</h1>
+          </div>
+        </div>
+        <div class="topbar-meta">
+          <a href="/" class="nav-link">Back to store</a>
+          {% if user %}
+            <span>Hello, {{ user.name }}</span>
+            <a href="/admin/logout" class="nav-link">Logout</a>
+          {% endif %}
+        </div>
+      </header>
+
+      <main class="admin-summary">
+        <div class="summary-card">
+          <span class="eyebrow">Total orders</span>
+          <strong>{{ orders|length }}</strong>
+        </div>
+        <div class="summary-card">
+          <span class="eyebrow">Confirmed</span>
+          <strong>{{ orders|selectattr('status', 'equalto', 'Confirmed')|list|length }}</strong>
+        </div>
+        <div class="summary-card">
+          <span class="eyebrow">Revenue</span>
+          <strong>KSh {{ '%.2f'|format(orders | sum(attribute='total')) }}</strong>
+        </div>
+      </main>
+
+      <section class="admin-panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Recent orders</p>
+            <h2>Town delivery activity</h2>
+          </div>
+        </div>
+
+        {% if orders %}
+          <div class="orders-table-wrap">
+            <table class="orders-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Restaurant</th>
+                  <th>Payment</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for order in orders %}
+                  <tr>
+                    <td>{{ order.orderId }}</td>
+                    <td>{{ order.customerName }}</td>
+                    <td>{{ order.restaurantName }}</td>
+                    <td>{{ order.paymentMethod }}</td>
+                    <td>KSh {{ '%.2f'|format(order.total) }}</td>
+                    <td><span class="status-badge">{{ order.status }}</span></td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <p class="empty-state">No orders yet. New customer orders will appear here.</p>
+        {% endif %}
+      </section>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Get Your Food | Admin Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+  </head>
+  <body>
+    <div class="page-shell mobile-app-shell">
+      <section class="login-screen">
+        <div class="login-card">
+          <div class="login-brand">
+            <span class="brand-mark">GF</span>
+            <div>
+              <p class="eyebrow">Admin access</p>
+              <h1>Get Your Food</h1>
+            </div>
+          </div>
+
+          <div class="auth-panel">
+            <div class="auth-status">Administrator login</div>
+            {% if error %}
+              <div class="auth-status error">{{ error }}</div>
+            {% endif %}
+
+            <form class="auth-form" method="post" action="/admin/login">
+              <label>
+                Admin email
+                <input name="email" type="email" placeholder="admin@getyourfood.local" required />
+              </label>
+              <label class="password-field">
+                Password
+                <div class="password-input-wrap">
+                  <input name="password" type="password" placeholder="••••••••" required />
+                  <button type="button" class="password-toggle" aria-label="Show password" title="Show password">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </button>
+                </div>
+              </label>
+              <button type="submit" class="primary-btn small-btn">Login as admin</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
+</html>
